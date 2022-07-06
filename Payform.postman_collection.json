@@ -1,0 +1,301 @@
+{
+	"info": {
+		"_postman_id": "284ad7d3-250a-4980-8757-231a16d3c59c",
+		"name": "Payform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16354483"
+	},
+	"item": [
+		{
+			"name": "https://webqa.mercdev.com/api/v1/user/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"authToken\", jsonData.authToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "webqa.mercdev.com"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\""
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json;charset=UTF-8"
+					},
+					{
+						"key": "authorization",
+						"value": ""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Windows\""
+					},
+					{
+						"key": "origin",
+						"value": "https://webqa.mercdev.com"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "referer",
+						"value": "https://webqa.mercdev.com/login"
+					},
+					{
+						"key": "accept-language",
+						"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"zinovieva@mercurydevelopment.com\",\"password\":\"Vesna2022\"}"
+				},
+				"url": {
+					"raw": "https://webqa.mercdev.com/api/v1/user/login",
+					"protocol": "https",
+					"host": [
+						"webqa",
+						"mercdev",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://webqa.mercdev.com/api/v1/product/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"var ids = [];\r",
+							"jsonData.products.forEach(product => ids.push(product.id))\r",
+							"postman.setEnvironmentVariable(\"ids\", jsonData.authToken);\r",
+							" postman.setEnvironmentVariable(\"ids\", ids);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authority",
+						"value": "webqa.mercdev.com"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\""
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "authorization",
+						"value": "{{authToken}}"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Windows\""
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "referer",
+						"value": "https://webqa.mercdev.com/"
+					},
+					{
+						"key": "accept-language",
+						"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+					}
+				],
+				"url": {
+					"raw": "https://webqa.mercdev.com/api/v1/product/",
+					"protocol": "https",
+					"host": [
+						"webqa",
+						"mercdev",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"product",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://webqa.mercdev.com/api/v1/order/createAndPay",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Test discount\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var transaction = jsonData.transaction\r",
+							"    var basePrice = 0;\r",
+							"\r",
+							"    transaction.order.products.forEach(prod => basePrice += prod.product.price * prod.quantity);\r",
+							"\r",
+							"    if (transaction.order.totalQuantity > 2) {\r",
+							"        pm.expect(jsonData.transaction.order.totalSum).to.eq(basePrice * 0.9);\r",
+							"    }\r",
+							"    else {\r",
+							"        pm.expect(jsonData.transaction.order.totalSum).to.eq(basePrice)\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "webqa.mercdev.com"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\""
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json;charset=UTF-8"
+					},
+					{
+						"key": "authorization",
+						"value": "{{authToken}}"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Windows\""
+					},
+					{
+						"key": "origin",
+						"value": "https://webqa.mercdev.com"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "referer",
+						"value": "https://webqa.mercdev.com/"
+					},
+					{
+						"key": "accept-language",
+						"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"card\": {\r\n        \"number\": \"3423324323432342\",\r\n        \"date\": \"2:33\",\r\n        \"name\": \"ffff\",\r\n        \"cvv\": \"343\"\r\n    },\r\n    \"products\": [\r\n        {\r\n            \"id\": \"1\",\r\n            \"quantity\": 3\r\n        }\r\n    ]\r\n}\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "https://webqa.mercdev.com/api/v1/order/createAndPay",
+					"protocol": "https",
+					"host": [
+						"webqa",
+						"mercdev",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"order",
+						"createAndPay"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
